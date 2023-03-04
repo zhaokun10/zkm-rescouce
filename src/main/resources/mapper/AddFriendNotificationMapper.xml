@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zkm.mapper.AddFriendNotificationMapper">
+    <resultMap id="BasicResultMap" type="com.zkm.model.FriendNotificationModel">
+        <id property="id" column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result property="friendId" column="friend_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result property="groupId" column="group_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result property="isAgree" column="is_agree" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="UserResultMap" type="com.zkm.model.UserZkm">
+        <id property="id" column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+        <result property="username" column="username" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result property="password" column="password" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result property="nickName" column="nick_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result property="avatar" column="avatar" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result property="email" column="email" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result property="online" column="online" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </resultMap>
+    <insert id="insertAddFriendRequest" parameterType="com.zkm.model.FriendNotificationModel">
+        insert into zkm.add_friend_notification (id, user_id, friend_id, is_agree)
+        values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{friendId,jdbcType=INTEGER},
+                #{isAgree,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertAddGroupRequest" parameterType="com.zkm.model.FriendNotificationModel">
+        insert into zkm.add_friend_notification (id, user_id, group_id, is_agree)
+        values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER},
+                #{isAgree,jdbcType=INTEGER})
+    </insert>
+    <update id="agreeFriendRequest" parameterType="java.lang.Integer">
+        update zkm.add_friend_notification
+        set is_agree = 1
+        where user_id = #{userId,jdbcType=INTEGER}
+          and friend_id = #{friendId,jdbcType=INTEGER}
+    </update>
+    <update id="disagreeFriendRequest" parameterType="java.lang.Integer">
+        update zkm.add_friend_notification
+        set is_agree = 0
+        where user_id = #{userId,jdbcType=INTEGER}
+          and friend_id = #{friendId,jdbcType=INTEGER}
+    </update>
+    <select id="getAllAddFriendNotificationByFriendId" resultMap="UserResultMap">
+        select username,
+               nick_name,
+               avatar,
+               id,
+               online
+        from zkm.user_zkm
+        where id in (select user_id
+                     from zkm.add_friend_notification
+                     where friend_id = #{friendId,jdbcType=INTEGER}
+                       and is_agree is null
+                       and group_id is null)
+    </select>
+
+</mapper>

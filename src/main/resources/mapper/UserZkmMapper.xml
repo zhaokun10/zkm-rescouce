@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zkm.mapper.UserZkmMapper">
+  <resultMap id="BaseResultMap" type="com.zkm.model.UserZkm">
+      <id property="id" column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result property="username" column="username" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <result property="password" column="password" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <result property="nickName" column="nick_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <result property="avatar" column="avatar" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <result property="email" column="email" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <result property="online" column="online" javaType="java.lang.Integer" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, username, password, nick_name, avatar, email, online
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_zkm
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="findOneByUsernameUserZkm" resultType="com.zkm.model.UserZkm">
+    select * from zkm.user_zkm where username=#{username,jdbcType=VARCHAR}
+  </select>
+  <select id="findAllInfoByUsername" resultMap="BaseResultMap">
+    select id, username, nick_name, avatar, email, online from zkm.user_zkm where username=#{username,jdbcType=VARCHAR}
+  </select>
+    <select id="findOneByUserEmail" resultType="com.zkm.model.UserZkm">
+      select * from zkm.user_zkm where username=#{email,jdbcType=VARCHAR}
+    </select>
+  <select id="findAllUserByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, nick_name, online from zkm.user_zkm where username like '%' #{username,jdbcType=VARCHAR} '%'
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user_zkm
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zkm.model.UserZkm">
+    insert into user_zkm (id, username, password, 
+      nick_name, avatar, email
+      )
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{nickName,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zkm.model.UserZkm">
+    insert into user_zkm
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="nickName != null">
+        nick_name,
+      </if>
+      <if test="avatar != null">
+        avatar,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null">
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zkm.model.UserZkm">
+    update user_zkm
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null">
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        avatar = #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zkm.model.UserZkm">
+    update user_zkm
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      avatar = #{avatar,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateOnlineInt">
+    update zkm.user_zkm
+    set online = #{online,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zkm.mapper.ChatRecordMapper">
+    <resultMap id="BaseResultMap" type="com.zkm.model.ChatRecord">
+        <id property="id" column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result property="friendId" column="friend_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result property="groupId" column="group_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result property="chatRecordTypeId" column="chat_record_type_id" javaType="java.lang.Integer"
+                jdbcType="INTEGER"/>
+        <result property="readed" column="readed" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result property="content" column="content" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="sendUser" column="send_user" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , user_id, friend_id, group_id, chat_record_type_id, readed, content
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from chat_record
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="findChatRecordByUserIdAndFriendId" resultMap="BaseResultMap">
+        select chat_record_type_id, readed, content, send_user
+        from zkm.chat_record
+        where (user_id = #{userId, jdbcType=INTEGER}
+            and friend_id = #{friendId,jdbcType=INTEGER})
+           or (user_id = #{friendId,jdbcType=INTEGER}
+            and friend_id = #{userId, jdbcType=INTEGER})
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from chat_record
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.zkm.model.ChatRecord">
+        insert into chat_record (id, user_id, friend_id,
+                                 group_id, chat_record_type_id, readed,
+                                 content, send_user, send_time)
+        values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{friendId,jdbcType=INTEGER},
+                #{groupId,jdbcType=INTEGER}, #{chatRecordTypeId,jdbcType=INTEGER}, #{readed,jdbcType=BIT},
+                #{content,jdbcType=VARCHAR}, #{sendUser,jdbcType=INTEGER}, CURRENT_TIMESTAMP)
+    </insert>
+    <insert id="insertSelective" parameterType="com.zkm.model.ChatRecord">
+        insert into chat_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="friendId != null">
+                friend_id,
+            </if>
+            <if test="groupId != null">
+                group_id,
+            </if>
+            <if test="chatRecordTypeId != null">
+                chat_record_type_id,
+            </if>
+            <if test="readed != null">
+                readed,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="friendId != null">
+                #{friendId,jdbcType=INTEGER},
+            </if>
+            <if test="groupId != null">
+                #{groupId,jdbcType=INTEGER},
+            </if>
+            <if test="chatRecordTypeId != null">
+                #{chatRecordTypeId,jdbcType=INTEGER},
+            </if>
+            <if test="readed != null">
+                #{readed,jdbcType=BIT},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zkm.model.ChatRecord">
+        update chat_record
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="friendId != null">
+                friend_id = #{friendId,jdbcType=INTEGER},
+            </if>
+            <if test="groupId != null">
+                group_id = #{groupId,jdbcType=INTEGER},
+            </if>
+            <if test="chatRecordTypeId != null">
+                chat_record_type_id = #{chatRecordTypeId,jdbcType=INTEGER},
+            </if>
+            <if test="readed != null">
+                readed = #{readed,jdbcType=BIT},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zkm.model.ChatRecord">
+        update chat_record
+        set user_id             = #{userId,jdbcType=INTEGER},
+            friend_id           = #{friendId,jdbcType=INTEGER},
+            group_id            = #{groupId,jdbcType=INTEGER},
+            chat_record_type_id = #{chatRecordTypeId,jdbcType=INTEGER},
+            readed              = #{readed,jdbcType=BIT},
+            content             = #{content,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <resultMap id="ReadedResultMap" type="com.zkm.model.ReadedModel">
+        <id property="id" column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result property="friendId" column="friend_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result property="lastReadTime" column="last_read_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
+        <result property="type" column="type" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <insert id="lastIntoChatWindow" parameterType="com.zkm.model.ReadedModel">
+        insert into zkm.readed (user_id, friend_id, last_readed_time, type)
+        values (#{userId,jdbcType=INTEGER}, #{friendId,jdbcType=INTEGER}, CURRENT_TIMESTAMP, #{type,jdbcType=INTEGER})
+    </insert>
+
+    <select id="findFriendLastIntoChatWindowTime" resultMap="ReadedResultMap">
+        select *
+        from zkm.readed
+        where user_id = #{userId , jdbcType=INTEGER}
+          and friend_id = #{friendId , jdbcType=INTEGER}
+        order by last_readed_time desc limit 1
+    </select>
+    <select id="selectOneReadedRecordByUserIdAndFriendIdAndType" parameterType="com.zkm.model.ReadedModel"
+            resultMap="ReadedResultMap">
+        select *
+        from zkm.readed
+        where user_id = #{userId , jdbcType=INTEGER}
+          and friend_id = #{friendId , jdbcType=INTEGER}
+          and type = #{type, jdbcType=INTEGER}
+    </select>
+
+    <update id="updateLastIntoChatWindowTime" parameterType="com.zkm.model.ReadedModel">
+        update zkm.readed
+        set last_readed_time = current_timestamp
+        where user_id = #{userId,jdbcType=INTEGER}
+          and friend_id = #{friendId,jdbcType=INTEGER}
+          and type = #{type, jdbcType=INTEGER}
+    </update>
+
+    <update id="updateChatRecordReaded" parameterType="java.lang.Integer">
+        update zkm.chat_record
+        set readed = 1
+        where (user_id = #{userId, jdbcType=INTEGER}
+            and friend_id = #{friendId,jdbcType=INTEGER}
+            and readed = 0)
+    </update>
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zkm.mapper.FriendMapper">
+    <resultMap id="BaseResultMap" type="com.zkm.model.UserZkm">
+        <id property="id" column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result property="username" column="username" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="password" column="password" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="nickName" column="nick_name" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="avatar" column="avatar" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="email" column="email" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="online" column="online" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , username, password, nick_name, avatar, email
+    </sql>
+    <insert id="insert" parameterType="java.lang.Integer">
+        insert into zkm.friend (user_id, friend_id)
+        values (#{userId,jdbcType=INTEGER}, #{friendId,jdbcType=INTEGER})
+    </insert>
+    <select id="getAllFriendByUserId" resultMap="BaseResultMap">
+        select username,
+               nick_name,
+               avatar,
+               id,
+               online,
+               (select count(id)
+                from zkm.chat_record
+                where friend_id = #{userId, jdbcType=INTEGER} and readed = 0) as unReadMessageCount
+        from zkm.user_zkm uz
+        where uz.id
+                  in
+              (select friend_id from zkm.friend f where user_id = #{userId, jdbcType=INTEGER})
+    </select>
+
+</mapper>
