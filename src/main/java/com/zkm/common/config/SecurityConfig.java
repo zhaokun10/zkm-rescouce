@@ -70,6 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 , "/openvidu-webcomponent-2.25.0.js"
                 , "/openvidu-webcomponent-2.25.0.css"
                 , "/app.js");
+
     }
 
     CorsConfigurationSource corsConfigurationSource() {
