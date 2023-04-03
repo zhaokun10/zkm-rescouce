@@ -1,20 +1,16 @@
 package com.zkm;
 
-import com.zkm.mapper.FriendMapper;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootTest
 class ZkmRescouceApplicationTests {
 
-	@Autowired
-	FriendMapper friendMapper;
 
 	@Test
 	void contextLoads() {
-		 friendMapper.getAllFriendByUserId(1).forEach(user-> System.out.println( user.toString()));
-
+		System.out.println(new BCryptPasswordEncoder().matches("456", "2a$10$Kf/wtrWbNmUyPSqmWIH0w.8u0IBDp.itvSHjqbnfd8dfn16a8mpge"));
 	}
 
 }

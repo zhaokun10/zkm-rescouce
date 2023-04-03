@@ -3,10 +3,12 @@ package com.zkm.service.impl;
 import com.zkm.mapper.UserZkmMapper;
 import com.zkm.model.UserZkm;
 import com.zkm.service.UserService;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,13 +32,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
     }
 
-
-
     @Override
     public int registerUser(UserZkm userZkm) {
         // 判断用户邮箱是否进行过注册
         UserZkm user = userZkmMapper.findOneByUserEmail(userZkm.getEmail());
         if(Objects.isNull(user)){
+            userZkm.setPassword(new BCryptPasswordEncoder().encode(userZkm.getPassword()));
+            userZkm.setNickName(RandomStringUtils.randomAlphabetic(6));
+            userZkm.setOnline(0);
             return userZkmMapper.insert(userZkm);
         }else {
             return 0;
@@ -66,5 +69,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public List<UserZkm> findAllUserByUsername(String username) {
         return userZkmMapper.findAllUserByUsername(username);
+    }
+
+    @Override
+    public UserZkm findUserInfoByUserId(Integer userId) {
+        return userZkmMapper.selectByPrimaryKey(userId);
+    }
+
+    public int updateUserInfo(UserZkm userZkm) {
+     UserZkm orgialUser =   userZkmMapper.findAllInfoByUsername(userZkm.getUsername());
+      userZkm.setPassword(orgialUser.getPassword());
+        return userZkmMapper.updateByPrimaryKey(userZkm);
     }
 }

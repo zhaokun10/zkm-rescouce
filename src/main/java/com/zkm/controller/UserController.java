@@ -16,7 +16,7 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/register")
-    JsonResult register(UserZkm userZkm) {
+    JsonResult register(@RequestBody UserZkm userZkm) {
         return userService.registerUser(userZkm) == 1 ? ResultTool.success() : ResultTool.fail();
     }
 
@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @PostMapping("/user/logout")
-    JsonResult logout(@RequestParam String username) throws Exception {
+    JsonResult logout(@RequestBody String username) throws Exception {
         int i =  userService.logout(username);
         return ResultTool.success(i);
     }
@@ -39,5 +39,17 @@ public class UserController {
     JsonResult findAllUserByUsername(@RequestParam String username) throws Exception {
         List<UserZkm> userZkmList =  userService.findAllUserByUsername(username);
         return ResultTool.success(userZkmList);
+    }
+
+    @PostMapping("/updateInfo")
+    JsonResult updateUserInfo(@RequestBody UserZkm userZkm) throws Exception {
+          userService.updateUserInfo(userZkm);
+        return ResultTool.success();
+    }
+
+    @GetMapping("/friendInfo")
+    JsonResult findUserInfoByUserId(@RequestParam Integer userId) throws Exception {
+       UserZkm userZkm = userService.findUserInfoByUserId(userId);
+        return ResultTool.success(userZkm);
     }
 }

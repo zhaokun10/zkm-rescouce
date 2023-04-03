@@ -13,4 +13,8 @@ public interface UserService {
     int logout(String username) throws Exception;
 
     List<UserZkm> findAllUserByUsername(String username);
+
+    UserZkm findUserInfoByUserId(Integer userId);
+
+    int updateUserInfo(UserZkm userZkm);
 }

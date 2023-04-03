@@ -23,7 +23,7 @@
     select * from zkm.user_zkm where username=#{username,jdbcType=VARCHAR}
   </select>
   <select id="findAllInfoByUsername" resultMap="BaseResultMap">
-    select id, username, nick_name, avatar, email, online from zkm.user_zkm where username=#{username,jdbcType=VARCHAR}
+    select id, username,password, nick_name, avatar, email, online from zkm.user_zkm where username=#{username,jdbcType=VARCHAR}
   </select>
     <select id="findOneByUserEmail" resultType="com.zkm.model.UserZkm">
       select * from zkm.user_zkm where username=#{email,jdbcType=VARCHAR}

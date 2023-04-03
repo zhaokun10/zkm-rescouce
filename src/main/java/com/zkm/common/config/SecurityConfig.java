@@ -57,7 +57,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()
-                //.addFilter(new JWTLoginFilter(authenticationManager()))
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()));
         http.headers().contentTypeOptions().disable();
     }
@@ -66,6 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/api/sessions/**"
                 , "/api/sessions/{sessionId}/connections"
+                ,"/register"
                 , "/"
                 , "/openvidu-webcomponent-2.25.0.js"
                 , "/openvidu-webcomponent-2.25.0.css"
