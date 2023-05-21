@@ -47,7 +47,6 @@ $(document).ready(async () => {
 async function joinSession() {
     //Getting form inputvalue
     var sessionName = document.getElementById('sessionName').value;
-    var participantName = document.getElementById('user').value;
 
     // Requesting tokens
     var promiseResults = await Promise.all([getToken(sessionName), getToken(sessionName)]);
@@ -60,8 +59,6 @@ async function joinSession() {
 
     // Displaying webcomponent
     webComponent.style.display = 'block';
-
-    // webComponent.participantName = participantName;
 
     // You can see the UI parameters documentation here
     // https://docs.openvidu.io/en/stable/api/openvidu-angular/components/OpenviduWebComponentComponent.html#inputs

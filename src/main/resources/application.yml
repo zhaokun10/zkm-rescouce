@@ -24,6 +24,11 @@ spring:
         min-idle: 0
         max-idle: 8
     timeout: 1000
+  mvc:
+    static-path-pattern: /**
+  web:
+    resources:
+      static-locations: classpath:/static,classpath:/public,classpath:/resources,classpath:/META-INF/resources
 mybatis:
   mapper-locations: mapper/*.xml
   type-aliases-package: com.zkm.model
@@ -33,7 +38,7 @@ zkm:
     expire: 604800 # 7天，s为单位
     secret: abcdefghabcdefghabcdefghabcdefgh
 
-OPENVIDU_URL: http://localhost:4443/
+OPENVIDU_URL: http://localhost:4443
 OPENVIDU_SECRET: MY_SECRET
 
 

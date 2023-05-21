@@ -1,8 +1,8 @@
 package com.zkm.common.config;
 
 import com.zkm.common.filter.JWTAuthenticationFilter;
-import com.zkm.common.handler.LoginFailedHandler;
-import com.zkm.common.handler.LoginSuccessHanlder;
+import com.zkm.common.result.handler.LoginFailedHandler;
+import com.zkm.common.result.handler.LoginSuccessHanlder;
 import com.zkm.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
